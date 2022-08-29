@@ -1,0 +1,135 @@
+package com.noorteck.selenium.day7;
+
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.interactions.Action;
+import org.openqa.selenium.interactions.Actions;
+import org.testng.Assert;
+
+public class DragAndDrop {
+	WebDriver driver;
+
+	public void setUp() {
+		String key = "webdriver.chrome.driver";
+		String path = "C:\\Users\\Ling Ling\\Desktop\\B7-Selenium\\chromedriver.exe";
+		System.setProperty(key, path);
+		driver = new ChromeDriver();
+
+		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+		driver.manage().window().maximize();
+
+	}
+
+	public void tearDown() throws InterruptedException {
+
+		Thread.sleep(3000);
+		driver.quit();
+	}
+
+	// double click
+
+	public void doubleClickTest() {
+		driver.get("https://demoqa.com/buttons");
+
+		WebElement el = driver.findElement(By.cssSelector("#doubleClickBtn"));
+
+		String expText = "You have done a double click";
+
+		Actions action = new Actions(driver);
+
+		action.doubleClick(el).build().perform();
+
+		String actText = driver.findElement(By.xpath("//*[contains(text(),'double click')]")).getText();
+
+		System.out.println("Exp: " + expText);
+		System.out.println("Act: " + actText);
+
+		Assert.assertEquals(actText, expText, "Double Click Test Failed");
+	}
+
+	// right click
+	
+	public void rightClickTest() {
+		driver.get("https://demoqa.com/buttons");
+		WebElement el = driver.findElement(By.xpath("//*[contains(text(),'Right Click')]"));
+		
+		String expText = "You have done a right click";
+		
+		Actions action = new Actions(driver);
+		
+		action.contextClick(el).build().perform();
+		
+		String actText = driver.findElement(By.xpath("//*[contains(text(), 'right click')]")).getText();
+		
+		System.out.println("Exp: " + expText);
+		System.out.println("Act: " + actText);
+		
+		Assert.assertEquals(actText, expText, "Right Click Test Failed");
+		
+	}
+
+	// simple click
+	public void dynamicClickTest() {
+		driver.get("https://demoqa.com/buttons");
+		WebElement el = driver.findElement(By.xpath("//*[text() = 'Click Me')]"));
+		
+		String expText = "You have done a dynamic click";
+		
+		el.click();
+		
+		String actText = driver.findElement(By.xpath("//*[contains(text(),'dynamic click')]")).getText();
+		
+		System.out.println("Exp: " + expText);
+		System.out.println("Act: " + actText);
+		
+		Assert.assertEquals(actText, expText, "Dynamic Click Test Failed");
+	}
+	
+	public void hoverOverTest() {
+		
+		driver.get("https://demo.automationtesting.in/Register.html");
+		
+		WebElement switchTo = driver.findElement(By.xpath("//*[contains(text(),'SwitchTo')]"));
+		WebElement window = driver.findElement(By.xpath("//a[contains(text(),'Windows')]"));
+		
+		Actions action = new Actions(driver);
+		
+		action.moveToElement(switchTo).moveToElement(window).click().build().perform();
+		
+		System.out.println("Done");
+		
+	}
+	
+	//drag and drop
+	public void dragAndDropTest() throws InterruptedException {
+		driver.get("https://jqueryui.com/droppable/#photo-manager");
+		
+		driver.switchTo().frame(0);
+		
+		WebElement el1 = driver.findElement(By.xpath("//*[@id='gallery']//li[1]"));
+		WebElement el2 = driver.findElement(By.xpath("//*[@id='gallery']//li[2]"));
+		WebElement el3 = driver.findElement(By.xpath("//*[@id='gallery']//li[3]"));
+		WebElement el4 = driver.findElement(By.xpath("//*[@id='gallery']//li[4]"));
+		
+		WebElement trash = driver.findElement(By.xpath("//*[@id='trash']"));
+		
+		Actions action = new Actions(driver);
+		
+		action.dragAndDrop(el1, trash).build().perform();
+		Thread.sleep(1000);
+		action.dragAndDrop(el2, trash).build().perform();
+		Thread.sleep(1000);
+		action.dragAndDrop(el3, trash).build().perform();
+		Thread.sleep(1000);
+		action.dragAndDrop(el4, trash).build().perform();
+		
+		System.out.println("Done");
+		
+	}
+		
+
+}
